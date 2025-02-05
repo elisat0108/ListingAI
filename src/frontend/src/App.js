@@ -24,8 +24,10 @@ function App() {
 
   const imagesPerPage = 3;
   const [currentPage, setCurrentPage] = useState(0);
+  const API_BASE_URL = "https://f2da-142-188-25-43.ngrok-free.app";
 
-  // Fetch listing data
+/*
+// Fetch listing data
   const fetchListing = async () => {
     setLoading(true);
     try {
@@ -39,6 +41,35 @@ function App() {
       alert("Error fetching listing");
     }
     setLoading(false);
+  };
+*/
+
+  // Fetch listing data
+  const fetchListing = async () => {
+    try {
+      console.log("Fetching from:", `${API_BASE_URL}/listing/`); // Debugging
+
+      const response = await fetch(`${API_BASE_URL}/listing/`, {
+        method: "GET",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "ngrok-skip-browser-warning": "true", // ✅ Bypasses Ngrok security page
+        },
+      });
+
+      if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+      const data = await response.json();
+      console.log("Fetched Listing:", data);
+      setListing(data);
+      setEditableListing({ ...data });
+      setModalOpen(true);
+    } catch (error) {
+      console.error("Error fetching listing:", error);
+      alert("Error fetching listing: " + error.message);
+    }
   };
 
   // Toggle image selection
@@ -79,8 +110,23 @@ function App() {
     });
   };
 
+  /*
   // Submit to post
   const createPost = () => {
+    alert("Post created successfully!");
+  };
+  */
+  
+  // Submit to post
+  const createPost = async () => {
+    await fetch(`${API_BASE_URL}/listing/publish/`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        post_content: editableListing.Description,
+        images: selectedImages,
+      }),
+    });
     alert("Post created successfully!");
   };
 
@@ -96,9 +142,9 @@ function App() {
       <Text fontSize="2xl" fontWeight="bold" mb={4}>
         AI-Powered Real Estate Marketing Hub
       </Text>
-
       <Flex mb={4} gap={2}>
-        {/* Search Bar */}
+	  
+	   {/* Search Bar */}
         <Input
           placeholder="Paste listing URL here"
           value={searchUrl}
@@ -140,7 +186,7 @@ function App() {
             display="flex"
             flexDirection="column"
             boxShadow="lg"
-            onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
+                onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
           >
             {/* Close Button */}
             <CloseButton
