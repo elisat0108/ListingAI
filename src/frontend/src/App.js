@@ -24,7 +24,7 @@ function App() {
 
   const imagesPerPage = 3;
   const [currentPage, setCurrentPage] = useState(0);
-  const API_BASE_URL = "https://f2da-142-188-25-43.ngrok-free.app";
+  const API_BASE_URL = "https://64e2-142-188-25-43.ngrok-free.app";
 
 /*
 // Fetch listing data
@@ -117,18 +117,41 @@ function App() {
   };
   */
   
-  // Submit to post
-  const createPost = async () => {
-    await fetch(`${API_BASE_URL}/listing/publish/`, {
+// Submit to FB Post
+const createPost = async () => {
+  try {
+    // Construct post content with all listing details
+    const postContent = `
+      🏡 ${editableListing.Address}
+      💰 Price: ${editableListing.Price}
+      🛏 Bedrooms: ${editableListing.Beds} | 🛁 Washrooms: ${editableListing.Washrooms}
+      📜 ${editableListing.Description}
+      
+      #RealEstate #HomeForSale #RealEstateAI
+    `;
+
+    const response = await fetch(`${API_BASE_URL}/listing/publish/`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        post_content: editableListing.Description,
-        images: selectedImages,
+        post_content: postContent, // Send formatted listing info
+        images: selectedImages, // Send selected images
       }),
     });
-    alert("Post created successfully!");
-  };
+
+    const data = await response.json();
+    if (response.ok) {
+      alert("Post created successfully! 🎉");
+    } else {
+      alert(`Error: ${data.error}`);
+      console.error("Failed to create post:", data);
+    }
+  } catch (error) {
+    console.error("Network error:", error);
+    alert("Network error. Please try again.");
+  }
+};
+
 
   // Close modal when clicking outside
   const handleCloseModal = (e) => {
