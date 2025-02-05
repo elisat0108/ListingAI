@@ -22,6 +22,7 @@ The **Real Estate AI Tool** is designed to help real estate professionals manage
    python3.13 -m uvicorn App:app --host 0.0.0.0 --port 8000 --reload
    ```
 3. The backend will start on `http://127.0.0.1:8000`.
+4. If using an ngrok domain open terminal and type ngrok http 8000 --host-header="localhost:8000"
 
 ### **Frontend Setup**
 1. Navigate to the frontend directory:
