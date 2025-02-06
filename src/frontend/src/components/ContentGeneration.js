@@ -1,4 +1,3 @@
-// src/components/ContentGeneration.js
 import React, { useState } from "react";
 import { Box, Input, Button, Text, Flex, Tooltip } from "@chakra-ui/react";
 import { InfoIcon } from "@chakra-ui/icons";
@@ -16,7 +15,16 @@ function ContentGeneration() {
       <Flex alignItems="center" justifyContent="space-between" mb={4}>
         <Text fontSize="lg" fontWeight="bold">
           Let’s plan your social media content{" "}
-          <Tooltip label="Provide your topic idea, and we'll suggest content." fontSize="sm">
+          <Tooltip 
+            label="Provide your topic idea, and we'll suggest content." 
+            fontSize="sm" 
+            placement="top"
+            hasArrow
+			p={2}
+            borderRadius="sm"
+            boxShadow="sm"
+            maxWidth="500px" // Ensures the tooltip fits one line
+          >
             <InfoIcon cursor="pointer" ml={1} />
           </Tooltip>
         </Text>
@@ -39,7 +47,7 @@ function ContentGeneration() {
           colorScheme="blue"
           size="lg"
           onClick={handleGenerate}
-          isDisabled={!inputValue.trim()} // Disable if input is empty
+          isDisabled={!inputValue.trim()}
         >
           Generate
         </Button>
