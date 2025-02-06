@@ -6,11 +6,11 @@ function ListingForm({ listing, handleFieldChange }) {
 
   // Custom handler to ensure price formatting
   const handlePriceChange = (e) => {
-    let value = e.target.value.replace(/[^0-9.]/g, ""); // Remove non-numeric characters
-    if (value) {
-      value = `$${parseFloat(value).toLocaleString()}`; // Format with $
-    }
-    handleFieldChange("Price", value);
+	let value = e.target.value.replace(/[^0-9.]/g, ""); // Remove non-numeric characters
+	if (value) {
+		value = parseFloat(value).toLocaleString(); 
+	}
+	handleFieldChange("Price", value);
   };
 
   return (
@@ -36,7 +36,7 @@ function ListingForm({ listing, handleFieldChange }) {
 				  height="100%"
 				  width="2.5rem" // Ensures consistent spacing
 			  >
-				  <Icon as={FaMapMarkerAlt} color="gray.400" />
+				  <Icon as={FaMapMarkerAlt} boxSize={4}  color="gray.400" />
 			  </InputLeftElement>
 
               <Input
@@ -51,8 +51,14 @@ function ListingForm({ listing, handleFieldChange }) {
           </FormControl>
           <FormControl flex="1">
             <InputGroup>
-              <InputLeftElement pointerEvents="none">
-                <Icon as={FaDollarSign} color="gray.400" />
+               <InputLeftElement
+                pointerEvents="none"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                height="100%"
+              >
+                <Icon as={FaDollarSign} color="gray.400" boxSize={5} />
               </InputLeftElement>
               <Input
                 type="text"
@@ -71,9 +77,15 @@ function ListingForm({ listing, handleFieldChange }) {
         <HStack spacing={4}>
           <FormControl flex="1">
             <InputGroup>
-              <InputLeftElement pointerEvents="none">
-                <Icon as={FaBed} color="gray.400" />
-              </InputLeftElement>
+              <InputLeftElement
+                pointerEvents="none"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                height="100%"
+              >
+                <Icon as={FaBed} color="gray.400" boxSize={5} />
+			 </InputLeftElement>
               <Input
                 type="number"
                 value={listing.Beds}
@@ -82,13 +94,20 @@ function ListingForm({ listing, handleFieldChange }) {
                 size="sm"
                 focusBorderColor="blue.500"
                 borderRadius="sm"
+				pl="2.5rem"
               />
             </InputGroup>
           </FormControl>
           <FormControl flex="1">
             <InputGroup>
-              <InputLeftElement pointerEvents="none">
-                <Icon as={FaBath} color="gray.400" />
+              <InputLeftElement
+                pointerEvents="none"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                height="100%"
+              >
+                <Icon as={FaBath} color="gray.400" boxSize={5} />
               </InputLeftElement>
               <Input
                 type="number"
@@ -98,6 +117,7 @@ function ListingForm({ listing, handleFieldChange }) {
                 size="sm"
                 focusBorderColor="blue.500"
                 borderRadius="sm"
+				pl="2.5rem"
               />
             </InputGroup>
           </FormControl>
