@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { Box, Text } from "@chakra-ui/react";
 import ListingFetcher from "./components/ListingFetcher";
 import ListingModal from "./components/ListingModal";
-import ContentGeneration from "./components/ContentGeneration"; // ✅ Import ContentGeneration
+import ContentGeneration from "./components/ContentGeneration";
+import CreateListing from "./components/CreateListing"; // Import PostListing
 
 function App() {
   const [listing, setListing] = useState(null);
@@ -23,12 +24,15 @@ function App() {
       {modalOpen && editableListing && (
         <ListingModal
           listing={editableListing}
-          setListing={setEditableListing}
+          setListing={editableListing}
           selectedImages={selectedImages}
           setSelectedImages={setSelectedImages}
           setModalOpen={setModalOpen}
         />
       )}
+      
+      {/* CreateListing Component */}
+      <CreateListing setModalOpen={setModalOpen} />
     </Box>
   );
 }

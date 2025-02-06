@@ -41,7 +41,7 @@ function ListingFetcher({ setListing, setEditableListing, setModalOpen }) {
         px={6} // Adjust padding for a sleeker look
         py={2}
       >
-        Auto-Generate Listing
+        Beta Fetch Listing
       </Button>
     </Flex>
   );
