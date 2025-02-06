@@ -69,8 +69,8 @@ def compile_listing():
     )
     return {"post_content": formatted_post}
 
-@app.post("/listing/publish/")
-def publish_listing(post: ListingPost):
+@app.post("/listing/publish/facebook")
+def publish_listing_facebook(post: ListingPost):
     """
     Publishes the listing on Facebook Page with up to 5 images.
     """
