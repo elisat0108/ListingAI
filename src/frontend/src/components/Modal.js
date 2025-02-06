@@ -1,4 +1,3 @@
-// src/components/Modal.js
 import React from "react";
 import { Box, Flex, CloseButton } from "@chakra-ui/react";
 
@@ -26,25 +25,28 @@ function Modal({ children, setModalOpen }) {
       <Box
         background="white"
         borderRadius="10px"
-        padding="20px"
-        width="90%"
-        maxWidth="600px"
-        height="auto"
+        padding="8px" // Reduce padding
+        width="85%" // Slightly smaller width
+        maxWidth="650px" // Reduced max width
+        height="85vh" // Slightly smaller height
         display="flex"
         flexDirection="column"
         boxShadow="lg"
-        position="relative" // ✅ Ensures close button stays in place
-        onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
+        position="relative"
+        onClick={(e) => e.stopPropagation()}
       >
-        {/* ✅ Close Button in Top Right */}
+        {/* Close Button */}
         <CloseButton
           position="absolute"
           top="10px"
           right="10px"
           onClick={() => setModalOpen(false)}
         />
-        
-        {children} {/* Allows inserting any content inside modal */}
+
+        {/* Modal Content */}
+        <Flex direction="column" height="100%">
+          {children}
+        </Flex>
       </Box>
     </Flex>
   );

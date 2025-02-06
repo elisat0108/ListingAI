@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { Input, Button, Flex } from "@chakra-ui/react";
+import { Button, Flex, Icon } from "@chakra-ui/react";
+import { MdHome } from "react-icons/md"; // Import Home Icon
 
 const API_BASE_URL = "https://64e2-142-188-25-43.ngrok-free.app";
 
 function ListingFetcher({ setListing, setEditableListing, setModalOpen }) {
-  const [searchUrl, setSearchUrl] = useState("");
   const [loading, setLoading] = useState(false);
 
   const fetchListing = async () => {
@@ -29,10 +29,19 @@ function ListingFetcher({ setListing, setEditableListing, setModalOpen }) {
   };
 
   return (
-    <Flex mb={4} gap={2}>
-      <Input placeholder="Paste listing URL here" value={searchUrl} onChange={(e) => setSearchUrl(e.target.value)} />
-      <Button onClick={fetchListing} colorScheme="blue" size="md" isLoading={loading} loadingText="Fetching...">
-        Fetch Listing
+    <Flex mb={4} justifyContent="center">
+      <Button
+        onClick={fetchListing}
+        colorScheme="blue"
+        size="md" // Smaller button size
+        isLoading={loading}
+        loadingText="Fetching..."
+        leftIcon={<Icon as={MdHome} boxSize={4} />} // Slightly smaller icon
+        borderRadius="md" // Modern, subtle rounded corners
+        px={6} // Adjust padding for a sleeker look
+        py={2}
+      >
+        Auto-Generate Listing
       </Button>
     </Flex>
   );

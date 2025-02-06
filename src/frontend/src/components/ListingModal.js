@@ -1,33 +1,48 @@
-// src/components/ListingModal.js
 import React, { useState } from "react";
-import { Box, Button, Text, Select } from "@chakra-ui/react";
-import Modal from "./Modal";  // ✅ Now using Modal.js
+import { Box, Button, Text, Flex } from "@chakra-ui/react";
+import Modal from "./Modal";
 import ImageGallery from "./ImageGallery";
 import ListingForm from "./ListingForm";
+import MediaPlatformMenu from "./MediaPlatformMenu";
 import { postToSocialMedia } from "../services/SocialMediaService";
 
 function ListingModal({ listing, setListing, selectedImages, setSelectedImages, setModalOpen }) {
   const [currentPage, setCurrentPage] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [selectedPlatform, setSelectedPlatform] = useState("facebook");
-
-  const handleFieldChange = (field, value) => {
-    setListing((prev) => ({ ...prev, [field]: value }));
-  };
+  const [selectedPlatforms, setSelectedPlatforms] = useState([]);
 
   const handlePost = async () => {
     setLoading(true);
-    await postToSocialMedia(selectedPlatform, listing, selectedImages);
+    try {
+      await postToSocialMedia(selectedPlatforms, listing, selectedImages);
+      alert("Posts successfully created for selected platforms!");
+    } catch (error) {
+      alert("Error posting to platforms: " + error.message);
+    }
     setLoading(false);
   };
 
   return (
     <Modal setModalOpen={setModalOpen}>
-      <Text fontSize="xl" fontWeight="bold" mb={2}>Confirm Listing Information</Text>
+      <Flex direction="column" height="100%">
+        {/* Header */}
+        <Box flexShrink="0" mb={0.1}>
+          <Text fontSize="md" fontWeight="bold" textAlign="center">
+            Confirm Listing Information
+          </Text>
+        </Box>
 
-      {/* Image Gallery Component */}
-      {listing.Images && listing.Images.length > 0 && (
-        <ImageGallery
+        {/* Main Content */}
+        <Flex flex="1" direction="column" gap={1}>
+          {/* Platform Selection Menu */}
+          <MediaPlatformMenu selectedPlatforms={selectedPlatforms} setSelectedPlatforms={setSelectedPlatforms} />
+
+       {/* Image Gallery Component */}
+          <Box flexShrink="0" maxHeight="20vh">
+		  </Box>
+
+		{listing.Images && listing.Images.length > 0 && (
+		  <ImageGallery
           images={listing.Images}
           selectedImages={selectedImages}
           toggleImageSelection={(img) => {
@@ -41,29 +56,32 @@ function ListingModal({ listing, setListing, selectedImages, setSelectedImages, 
           }}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
-        />
+		/>
       )}
 
-      {/* Listing Form Component */}
-      <ListingForm listing={listing} handleFieldChange={handleFieldChange} />
+           {/* Listing Form */}
+          <Box flex="1" overflow="hidden">
+            <ListingForm
+              listing={listing}
+              handleFieldChange={(field, value) => setListing({ ...listing, [field]: value })}
+            />
+          </Box>
+        </Flex>
 
-      {/* Select Social Media Platform */}
-      <Box mt={4}>
-        <Text fontWeight="bold" mb={1}>Select Platform</Text>
-        <Select value={selectedPlatform} onChange={(e) => setSelectedPlatform(e.target.value)}>
-          <option value="facebook">Facebook</option>
-          <option value="twitter">Twitter</option>
-          <option value="linkedin">LinkedIn</option>
-          <option value="blog">Blog</option>
-        </Select>
-      </Box>
-
-      {/* Post Button */}
-      <Button mt={4} colorScheme="green" size="lg" width="100%" onClick={handlePost} isLoading={loading} isDisabled={selectedImages.length === 0}>
-        Post to {selectedPlatform.charAt(0).toUpperCase() + selectedPlatform.slice(1)}
-      </Button>
-
-      {/* Close Button Removed Here (Already Handled in Modal.js) */}
+        {/* Footer */}
+        <Box flexShrink="0" mt={2} display="flex" justifyContent="flex-end">
+		  <Button
+			colorScheme="green"
+			size="sm"
+			width="20%"
+			onClick={handlePost}
+			isLoading={loading}
+			isDisabled={!selectedImages.length || !selectedPlatforms.length}
+		  >
+			Compile Post
+		  </Button>
+		</Box>
+      </Flex>
     </Modal>
   );
 }

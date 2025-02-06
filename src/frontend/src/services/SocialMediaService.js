@@ -1,14 +1,17 @@
-// src/services/SocialMediaService.js
 const API_BASE_URL = "https://64e2-142-188-25-43.ngrok-free.app";
 
 /**
  * Generic function to post to multiple platforms
- * @param {string} platform - The target platform (e.g., "facebook", "twitter", "linkedin", "blog")
+ * @param {string | array} platforms - Selected platform(s) (e.g., "facebook" or ["facebook", "twitter"])
  * @param {object} listing - The listing details
  * @param {array} selectedImages - Array of selected image URLs
  */
-export const postToSocialMedia = async (platform, listing, selectedImages) => {
+
+export const postToSocialMedia = async (platforms, listing, selectedImages) => {
   try {
+    // Ensure platforms is always an array
+    const platformArray = Array.isArray(platforms) ? platforms : [platforms];
+
     // Construct post content
     const postContent = `
       🏡 ${listing.Address}
@@ -19,42 +22,49 @@ export const postToSocialMedia = async (platform, listing, selectedImages) => {
       #RealEstate #HomeForSale #RealEstateAI
     `;
 
-    // Ensure correct API endpoint
+    // Define API endpoints for supported platforms
     const platformEndpoints = {
-      facebook: `${API_BASE_URL}/listing/publish/facebook`,
-      twitter: `${API_BASE_URL}/listing/publish/twitter/`,
-      linkedin: `${API_BASE_URL}/listing/publish/linkedin/`,
-      blog: `${API_BASE_URL}/listing/publish/blog/`,
+      facebook: `${API_BASE_URL}/listing/publish/facebook`,     
+      twitter: `${API_BASE_URL}/listing/publish/twitter/`,     // Not yet supported
+      linkedin: `${API_BASE_URL}/listing/publish/linkedin/`,   // Not yet supported
+      blog: `${API_BASE_URL}/listing/publish/blog/`,           // Not yet supported
+      instagram: `${API_BASE_URL}/listing/publish/instagram/`, // Not yet supported
+      tiktok: `${API_BASE_URL}/listing/publish/tiktok/`, // Not yet supported
     };
 
-    if (!platformEndpoints[platform]) {
-      alert(`Unsupported platform: ${platform}`);
+    // Filter out unsupported platforms
+    const validPlatforms = platformArray.filter((platform) => platformEndpoints[platform]);
+
+    if (validPlatforms.length === 0) {
+      alert("No valid platforms selected.");
       return;
     }
 
-    console.log(`Posting to: ${platformEndpoints[platform]}`); // Debugging
+    for (const platform of validPlatforms) {
+      console.log(`Posting to: ${platformEndpoints[platform]}`); // Debugging
 
-    const response = await fetch(platformEndpoints[platform], {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "ngrok-skip-browser-warning": "true",  // ✅ If using ngrok, prevents security errors
-      },
-      body: JSON.stringify({
-        post_content: postContent,
-        images: selectedImages,
-      }),
-    });
+      const response = await fetch(platformEndpoints[platform], {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "true", // ✅ Prevents security errors if using ngrok
+        },
+        body: JSON.stringify({
+          post_content: postContent,
+          images: selectedImages,
+        }),
+      });
 
-    const data = await response.json();
-    if (response.ok) {
-      alert(`${platform.toUpperCase()} Post created successfully! 🎉`);
-    } else {
-      alert(`Error posting to ${platform}: ${data.error}`);
-      console.error(`Failed to post on ${platform}:`, data);
+      const data = await response.json();
+      if (response.ok) {
+        alert(`${platform.toUpperCase()} Post created successfully! 🎉`);
+      } else {
+        alert(`Error posting to ${platform}: ${data.error}`);
+        console.error(`Failed to post on ${platform}:`, data);
+      }
     }
   } catch (error) {
-    console.error(`Network error while posting to ${platform}:`, error);
+    console.error(`Network error while posting to platforms:`, error);
     alert(`Network error. Please try again.`);
   }
 };
