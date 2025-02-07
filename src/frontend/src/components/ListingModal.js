@@ -26,10 +26,8 @@ function ListingModal({ listing, setListing, selectedImages, setSelectedImages, 
     <Modal setModalOpen={setModalOpen}>
       <Flex direction="column" height="100%">
         {/* Header */}
-        <Box flexShrink="0" mb={0.1}>
-          <Text fontSize="md" fontWeight="bold" textAlign="center">
-            Confirm Listing Information
-          </Text>
+        <Box flexShrink="0" mb={0.1} textAlign="center">
+          <Text fontSize="md" fontWeight="bold">Confirm Listing Information</Text>
         </Box>
 
         {/* Main Content */}
@@ -37,29 +35,26 @@ function ListingModal({ listing, setListing, selectedImages, setSelectedImages, 
           {/* Platform Selection Menu */}
           <MediaPlatformMenu selectedPlatforms={selectedPlatforms} setSelectedPlatforms={setSelectedPlatforms} />
 
-       {/* Image Gallery Component */}
-          <Box flexShrink="0" maxHeight="20vh">
-		  </Box>
+          {/* Image Gallery Component */}
+          {listing && listing.Images && listing.Images.length > 0 && (
+            <ImageGallery
+              images={listing.Images}
+              selectedImages={selectedImages}
+              toggleImageSelection={(img) => {
+                setSelectedImages((prev) =>
+                  prev.includes(img)
+                    ? prev.filter((selected) => selected !== img)
+                    : prev.length < 8
+                    ? [...prev, img]
+                    : prev
+                );
+              }}
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+            />
+          )}
 
-		{listing.Images && listing.Images.length > 0 && (
-		  <ImageGallery
-          images={listing.Images}
-          selectedImages={selectedImages}
-          toggleImageSelection={(img) => {
-            setSelectedImages((prev) =>
-              prev.includes(img)
-                ? prev.filter((selected) => selected !== img)
-                : prev.length < 8
-                ? [...prev, img]
-                : prev
-            );
-          }}
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-		/>
-      )}
-
-           {/* Listing Form */}
+          {/* Listing Form */}
           <Box flex="1" overflow="hidden">
             <ListingForm
               listing={listing}
@@ -68,19 +63,19 @@ function ListingModal({ listing, setListing, selectedImages, setSelectedImages, 
           </Box>
         </Flex>
 
-        {/* Footer */}
-        <Box flexShrink="0" mt={2} display="flex" justifyContent="flex-end">
-		  <Button
-			colorScheme="green"
-			size="sm"
-			width="20%"
-			onClick={handlePost}
-			isLoading={loading}
-			isDisabled={!selectedImages.length || !selectedPlatforms.length}
-		  >
-			Compile Post
-		  </Button>
-		</Box>
+        {/* Footer Buttons */}
+        <Flex justifyContent="flex-end" mt={2}>
+          <Button
+            colorScheme="green"
+            size="sm"
+            width="20%"
+            onClick={handlePost}
+            isLoading={loading}
+            isDisabled={!selectedImages.length || !selectedPlatforms.length}
+          >
+            Compile Post
+          </Button>
+        </Flex>
       </Flex>
     </Modal>
   );
